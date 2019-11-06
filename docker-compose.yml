@@ -34,6 +34,8 @@ services:
     environment:
       - ANSIBLE_STDOUT_CALLBACK=debug
       - TF_LOG=TRACE
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+      - AWS_DEFAULT_REGION=eu-west-1
     volumes:
-      - $HOME/.aws:/root/.aws
       - ./:/usr/src/app
