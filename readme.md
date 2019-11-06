@@ -1,12 +1,13 @@
 Example of reproducing a bug in overriding provider with alias in module. 
 Also in this terraform issue https://github.com/hashicorp/terraform/issues/21699
 
-So we will reproduce by creating dynamo db locally 
+So we will reproduce by creating dynamo db locally, we have overridden the provider 
+dynamodb endpoint and disabled credentials validation and requesting account id 
 
 Success ->  table is created 
 
 Bug -> provider is not overridden and tries to
-       create table in aws which fails since the container does not have permission
+       get aws token and fail since the credentials are invalid
        
 Since the bug is intermittent, we will run a loop that keeps on running terraform apply until it fails 
 
