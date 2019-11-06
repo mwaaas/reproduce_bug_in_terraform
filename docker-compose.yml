@@ -1,0 +1,39 @@
+version: "3.4"
+services:
+  dynamodb:
+    image: amazon/dynamodb-local:1.11.477
+    command: -jar DynamoDBLocal.jar -inMemory -sharedDb
+    environment:
+      - "AWS_DEFAULT_REGION=eu-west-1"
+    ports:
+      - "8011:8000"
+
+  dynamodb-ui:
+    depends_on:
+      - dynamodb
+    image: aaronshaf/dynamodb-admin:latest
+    environment:
+      - DYNAMO_ENDPOINT=http://dynamodb:8000
+    ports:
+      - 8009:8001
+
+  dynamodb-local-mock-unsupported-api:
+    links:
+      - dynamodb
+    depends_on:
+      - dynamodb
+    image: mwaaas/dynamodb_local_mock_unsupported_api:latest
+    ports:
+      - 8010:4567
+
+
+  dev_tools:
+    image: mwaaas/ansible_playbook:latest-latest
+    links:
+      - dynamodb-local-mock-unsupported-api:${dynamodb_endpoint-dynamodb.eu-west-1.amazonaws.com}
+    environment:
+      - ANSIBLE_STDOUT_CALLBACK=debug
+      - TF_LOG=TRACE
+    volumes:
+      - $HOME/.aws:/root/.aws
+      - ./:/usr/src/app
