@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 x=1
-while make deploy with_docker=no ; do
+
+make init
+while make deploy; do
     sleep 3
     echo "Welcome $x times"
     x=$(( $x + 1 ))
